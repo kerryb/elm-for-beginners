@@ -9,12 +9,16 @@ import Html.Events exposing (onClick)
 
 
 type alias Model =
-    Int
+    { caloriesToAdd : Int
+    , total : Int
+    }
 
 
 initModel : Model
 initModel =
-    0
+    { caloriesToAdd = 0
+    , total = 0
+    }
 
 
 
@@ -30,10 +34,10 @@ update : Msg -> Model -> Model
 update msg model =
     case msg of
         AddCalorie ->
-            model + 1
+            { model | total = model.total + 1 }
 
         Clear ->
-            0
+            { model | total = 0 }
 
 
 
@@ -43,7 +47,7 @@ update msg model =
 view : Model -> Html Msg
 view model =
     div []
-        [ h3 [] [ text ("Total calories: " ++ (toString model)) ]
+        [ h3 [] [ text ("Total calories: " ++ (toString model.total)) ]
         , button [ type_ "button", onClick AddCalorie ] [ text "Add" ]
         , button [ type_ "button", onClick Clear ] [ text "Clear" ]
         ]
