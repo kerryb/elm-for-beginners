@@ -1,8 +1,8 @@
 module Main exposing (main)
 
-import Html exposing (Html, beginnerProgram, div, h3, button, text)
+import Html exposing (Html, beginnerProgram, div, h3, input, button, text)
 import Html.Attributes exposing (type_)
-import Html.Events exposing (onClick)
+import Html.Events exposing (onClick, onInput)
 
 
 -- model
@@ -26,15 +26,19 @@ initModel =
 
 
 type Msg
-    = AddCalorie
+    = UpdateCaloriesToAdd String
+    | AddCalories
     | Clear
 
 
 update : Msg -> Model -> Model
 update msg model =
     case msg of
-        AddCalorie ->
-            { model | total = model.total + 1 }
+        UpdateCaloriesToAdd caloriesToAdd ->
+            { model | caloriesToAdd = Result.withDefault 0 (String.toInt caloriesToAdd) }
+
+        AddCalories ->
+            { model | total = model.total + model.caloriesToAdd }
 
         Clear ->
             { model | total = 0 }
@@ -48,7 +52,8 @@ view : Model -> Html Msg
 view model =
     div []
         [ h3 [] [ text ("Total calories: " ++ (toString model.total)) ]
-        , button [ type_ "button", onClick AddCalorie ] [ text "Add" ]
+        , input [ type_ "number", onInput UpdateCaloriesToAdd ] []
+        , button [ type_ "button", onClick (AddCalories) ] [ text "Add" ]
         , button [ type_ "button", onClick Clear ] [ text "Clear" ]
         ]
 
